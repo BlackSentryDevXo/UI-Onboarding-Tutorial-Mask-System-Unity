@@ -1,12 +1,10 @@
 
-https://github.com/user-attachments/assets/01dd8ff6-89cd-4f7b-9308-72f4a0b2855b
-
-https://github.com/user-attachments/assets/ae2f385d-9c79-4ba4-ad23-88d624018de0
 # 🎮 Unity UI Tutorial System
 
 A **fully customizable, dynamic UI tutorial system** for Unity that helps guide players by highlighting buttons, displaying tooltips, and managing tutorial sequences. This system is designed to be **modular**, **scalable**, and **easy to integrate** into any game project.
 
-   Uploading Screen Recording 2025-03-20 at 7.38.10 PM.mp4…
+## ✨ Preview
+   https://github.com/user-attachments/assets/01dd8ff6-89cd-4f7b-9308-72f4a0b2855b
 
 ## ✨ Features
 - **Dynamic Tutorial Sequences** – Easily create and manage multiple tutorial sequences.
