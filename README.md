@@ -134,7 +134,7 @@ This project is licensed under the **MIT License**. Feel free to use and modify 
 ---
 
 ## 👏 Credits
-Developed by **[Your Name]**. Inspired by various UI tutorials in the gaming industry.
+Developed by **Black Sentry**. Inspired by various UI tutorials in the gaming industry.
 
 ---
 
