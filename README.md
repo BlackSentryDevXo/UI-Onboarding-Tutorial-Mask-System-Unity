@@ -27,9 +27,8 @@ git clone https://github.com/BlackSentryDevXo/UI-Obboarding-Tutorial-Mask-System
 2. Attach the **`UITutorialManager.cs`** script.
 3. Assign:
    - **Overlay Panel** (to dim the screen during tutorials).
-   - **Tooltip Prefab
+   - **Tooltip Prefab** (for showing instructions).
    - <img width="964" alt="Screenshot 2025-03-20 at 7 56 01 PM" src="https://github.com/user-attachments/assets/e9e8ad5b-2aa4-467d-bbfc-a241493716ee" />
-** (for showing instructions).
   
 <img width="496" alt="Screenshot 2025-03-20 at 7 53 50 PM" src="https://github.com/user-attachments/assets/8a479f78-052b-40d1-89d6-5c0d0e98705a" />
 
