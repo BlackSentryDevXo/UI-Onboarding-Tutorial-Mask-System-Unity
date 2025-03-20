@@ -30,17 +30,14 @@ git clone https://github.com/BlackSentryDevXo/UI-Obboarding-Tutorial-Mask-System
    - **Tooltip Prefab** (for showing instructions).
    - <img width="964" alt="Screenshot 2025-03-20 at 7 56 01 PM" src="https://github.com/user-attachments/assets/e9e8ad5b-2aa4-467d-bbfc-a241493716ee" />
   
-<img width="496" alt="Screenshot 2025-03-20 at 7 53 50 PM" src="https://github.com/user-attachments/assets/8a479f78-052b-40d1-89d6-5c0d0e98705a" />
-
-
 ### 4️⃣ Define Your Buttons
 1. Create a `ScriptableObject` for buttons:
    - **Go to** `Assets > Create > UI > Buttons DB`
    - Name it `ButtonsDatabase`.
    - Add the button names.
    - Click `Generate Enum` (or use `Tools > ButtonID Enum Generator`).
-<img width="624" alt="Screenshot 2025-03-20 at 7 57 39 PM" src="https://github.com/user-attachments/assets/9f281ad2-16fe-477f-aca3-d93646a2cda4" />
-<img width="513" alt="Screenshot 2025-03-20 at 7 56 44 PM" src="https://github.com/user-attachments/assets/5c7a7573-9449-41b5-a8c6-cb1d7677e020" />
+   <img width="624" alt="Screenshot 2025-03-20 at 7 57 39 PM" src="https://github.com/user-attachments/assets/9f281ad2-16fe-477f-aca3-d93646a2cda4" />
+   <img width="513" alt="Screenshot 2025-03-20 at 7 56 44 PM" src="https://github.com/user-attachments/assets/5c7a7573-9449-41b5-a8c6-cb1d7677e020" />
 
 2. **IMPORTANT!!** Add UIButton.cs to every button you want highlighted
 3. **IMPORTANT!!** For every button you want highlighted, Assign `ButtonID` to each UI button in the Inspector.
@@ -52,9 +49,11 @@ git clone https://github.com/BlackSentryDevXo/UI-Obboarding-Tutorial-Mask-System
 3. List the tutorial sequence names.
 4. Click `Generate Enum`.
 5. Assign tutorial sequences in `UITutorialManager`.
-<img width="624" alt="Screenshot 2025-03-20 at 7 57 39 PM" src="https://github.com/user-attachments/assets/423380f4-3fd5-436e-b828-b482f1dfe5d0" />
-<img width="510" alt="Screenshot 2025-03-20 at 7 56 57 PM" src="https://github.com/user-attachments/assets/78338707-71cf-4a11-9a38-65fa76a886f5" />
+   <img width="624" alt="Screenshot 2025-03-20 at 7 57 39 PM" src="https://github.com/user-attachments/assets/423380f4-3fd5-436e-b828-b482f1dfe5d0" />
+   <img width="510" alt="Screenshot 2025-03-20 at 7 56 57 PM" src="https://github.com/user-attachments/assets/78338707-71cf-4a11-9a38-65fa76a886f5" />
 
+Your Tutorial manager should look something like this when everything is well setup
+   <img width="496" alt="Screenshot 2025-03-20 at 7 53 50 PM" src="https://github.com/user-attachments/assets/8a479f78-052b-40d1-89d6-5c0d0e98705a" />
 
 ### 6️⃣ Install `NaughtyAttributes` (Optional)
 To take advantage of enhanced Inspector UI flexibility, install the **NaughtyAttributes** package:
@@ -98,8 +97,8 @@ var step = new UITutorialStep {
 };
 ```
 ### Here are some visuals of how a well setup project should look like in action
-<img width="289" alt="Screenshot 2025-03-20 at 7 54 55 PM" src="https://github.com/user-attachments/assets/84fc3a92-5012-417c-8d7d-a1e7a8981b15" />
-<img width="289" alt="Screenshot 2025-03-20 at 7 55 22 PM" src="https://github.com/user-attachments/assets/b5fa6760-a802-4a99-8d14-24a88390085b" />
+   <img width="289" alt="Screenshot 2025-03-20 at 7 54 55 PM" src="https://github.com/user-attachments/assets/84fc3a92-5012-417c-8d7d-a1e7a8981b15" />
+   <img width="289" alt="Screenshot 2025-03-20 at 7 55 22 PM" src="https://github.com/user-attachments/assets/b5fa6760-a802-4a99-8d14-24a88390085b" />
 
 
 ### 🎛️ Adjust Button Highlight Effects
