@@ -74,13 +74,6 @@ public class UIButton : MonoBehaviour
 
     void Click()
     {
-        SoundManager.instance.PlaySound(clickSound);
-        if (useVibration)
-        {
-            if (!SoundManager.instance.IsHapticsOff())
-            { HapticFeedback.LightFeedback(); }
-        }
-
         if (isFocused)
         {
             FindAnyObjectByType<UITutorialManager>().OnFocusedButtonClicked(buttonID);
