@@ -17,6 +17,7 @@ public class UITutorialManager : MonoBehaviour
     private Action currentlyFocusedButtonCallback; // Callback for the currently focused button
     private GameObject currentTooltip; // The currently active tooltip
     private TooltipUI tooltip;
+    private Button overlayButton;
 
     [Header("Debug")]
     public SequenceID testSequenceID;
@@ -25,6 +26,7 @@ public class UITutorialManager : MonoBehaviour
     public int currentStepIndex = 0;
     private TutorialSequence currentSequence;
     private Dictionary<ButtonID, UIButton> buttonDictionary = new Dictionary<ButtonID, UIButton>();
+    private Dictionary<Button, UnityEngine.Events.UnityAction> tutorialClickActions = new();
 
     void Awake()
     {
@@ -44,6 +46,7 @@ public class UITutorialManager : MonoBehaviour
                 buttonDictionary[button.buttonID] = button;
             }
         }
+        ResetButtonAction();
     }
 
     [Button]
@@ -84,43 +87,77 @@ public class UITutorialManager : MonoBehaviour
 
         var step = currentSequence.steps[currentStepIndex];
 
-        // Enable overlay panel
-        if (overlayPanel != null) overlayPanel.SetActive(true);
-
-        // Find target button
-        UIButton targetButton = FindButton(step.buttonID);
-        if (targetButton == null)
+        // Enable overlay panel ad add a button to it for skipping panels without buttons
+        if (overlayPanel != null)
         {
-            Debug.LogError($"Button with ID {step.buttonID} not found!");
-            return;
+            overlayPanel.SetActive(true);
+            if (overlayPanel.GetComponent<Button>() == null)
+            {
+                overlayButton = overlayPanel.AddComponent<Button>();
+            }
+            else
+            {
+                overlayButton = overlayPanel.GetComponent<Button>();
+            }
+            overlayButton.interactable = false;
         }
 
-        // Activate parent if it's inactive
-        if (!targetButton.gameObject.activeInHierarchy)
+        // Find target button
+        if (step.focusButtonID != ButtonID.None)
         {
-            Transform parent = targetButton.transform.parent;
-            while (parent != null)
+            UIButton targetButton = FindButton(step.focusButtonID);
+            if (targetButton == null)
             {
-                if (!parent.gameObject.activeSelf)
+                Debug.LogError($"Button with ID {step.focusButtonID} not found!");
+                return;
+            }
+
+            // Activate parent if it's inactive
+            if (!targetButton.gameObject.activeInHierarchy)
+            {
+                Transform parent = targetButton.transform.parent;
+                while (parent != null)
                 {
-                    parent.gameObject.SetActive(true);
+                    if (!parent.gameObject.activeSelf)
+                    {
+                        parent.gameObject.SetActive(true);
+                    }
+                    parent = parent.parent;
                 }
-                parent = parent.parent;
+            }
+
+            // Highlight button
+            OnButtonFocus?.Invoke(step.focusButtonID);
+
+            // Get the Button component and remove any previous listeners to avoid stacking events
+            Button buttonComponent = targetButton.GetComponent<Button>();
+            if (tutorialClickActions.TryGetValue(buttonComponent, out var existingAction))
+            {
+                buttonComponent.onClick.RemoveListener(existingAction);
+                tutorialClickActions.Remove(buttonComponent);
+            }
+
+            // Create a new action for this step
+            UnityEngine.Events.UnityAction clickAction = () => OnStepCompleted(step);
+
+            // Add and store it
+            buttonComponent.onClick.AddListener(clickAction);
+            tutorialClickActions[buttonComponent] = clickAction;
+        }
+        else
+        {
+            // Move to next step when we tap on the overlay panel
+            if (overlayButton)
+            {
+                overlayButton.interactable = true;
+                overlayButton.onClick.RemoveAllListeners(); // Add this before adding new one
+                overlayButton.onClick.AddListener(() => OnStepCompleted(step));
             }
         }
 
-        // Highlight button
-        OnButtonFocus?.Invoke(step.buttonID);
-
         // Show tooltip
-        ShowTooltip(step.buttonID, step.message);
-        
-        // Get the Button component and remove any previous listeners to avoid stacking events
-        Button buttonComponent = targetButton.GetComponent<Button>();
-        buttonComponent.onClick.RemoveAllListeners(); // Remove previous tutorial event listeners
-        buttonComponent.onClick.AddListener(() => OnStepCompleted(step)); // Move to next step on click
+        ShowTooltip(step.focusButtonID, step.message);
     }
-
 
     // Called when a tutorial step is completed
     private void OnStepCompleted(UITutorialStep step)
@@ -136,6 +173,7 @@ public class UITutorialManager : MonoBehaviour
         isTutorialActive = false;
         if (overlayPanel != null) overlayPanel.SetActive(false);
         Debug.Log("Tutorial Completed.");
+        ResetButtonAction();
     }
 
     // Focus on a specific button by its ButtonID and provide a callback for when it's clicked
@@ -168,18 +206,50 @@ public class UITutorialManager : MonoBehaviour
             currentTooltip = Instantiate(tooltipPrefab, overlayPanel.transform);
             tooltip = currentTooltip.GetComponent<TooltipUI>();
         }
-
-        // Find the target button
-        UIButton targetButton = FindButton(buttonID);
-        if (targetButton == null)
+        else
         {
-            Debug.LogError($"Button with ID {buttonID} not found!");
-            return;
+            tooltip.gameObject.SetActive(false);
         }
 
-        // Set tooltip text and position
+        // Find the target button
+        if (buttonID != ButtonID.None)
+        {
+            UIButton targetButton = FindButton(buttonID);
+            if (targetButton == null)
+            {
+                Debug.LogError($"Button with ID {buttonID} not found!");
+                return;
+            }
+
+            // Set tooltip position
+            PositionNearButton(targetButton.GetComponent<RectTransform>());
+        }
+        else
+        {
+            // Set tooltip position to the center of the screen
+            PositionAtCenter();
+        }
         tooltip.SetText(tooltipText);
-        PositionNearButton(targetButton.GetComponent<RectTransform>());
+        tooltip.gameObject.SetActive(true);
+    }
+
+    private void PositionAtCenter()
+    {
+        RectTransform toolTipRect = tooltip.GetComponent<RectTransform>();
+
+        // Ensure the tooltip anchors and pivot are centered
+        toolTipRect.anchorMin = new Vector2(0.5f, 0.5f);
+        toolTipRect.anchorMax = new Vector2(0.5f, 0.5f);
+        toolTipRect.pivot = new Vector2(0.5f, 0.5f);
+
+        // Center it relative to the parent (canvas/overlayPanel)
+        toolTipRect.anchoredPosition = Vector2.zero;
+
+        // Hide arrow if it exists
+        if (tooltip.arrowImage != null)
+        {
+            tooltip.arrowImage.gameObject.SetActive(false);
+        }
     }
 
     public void PositionNearButton(RectTransform targetButtonRect)
@@ -229,11 +299,11 @@ public class UITutorialManager : MonoBehaviour
 
         // Apply tooltip position
         toolTipRect.anchoredPosition = new Vector2(desiredX, desiredY);
-        toolTipRect.gameObject.SetActive(true);
 
         // Position arrow
         if (tooltip.arrowImage != null)
         {
+            tooltip.arrowImage.gameObject.SetActive(true);
             RectTransform arrowRect = tooltip.arrowImage;
 
             // Calculate horizontal offset to maintain arrow pointing at button
@@ -264,6 +334,7 @@ public class UITutorialManager : MonoBehaviour
             }
         }
     }
+
     // Call this method to stop focusing on any button
     public void StopFocus()
     {
@@ -311,5 +382,14 @@ public class UITutorialManager : MonoBehaviour
             }
         }
         return null; // Button not found
+    }
+
+    void ResetButtonAction()
+    {
+        foreach (var pair in tutorialClickActions)
+        {
+            pair.Key.onClick.RemoveListener(pair.Value);
+        }
+        tutorialClickActions.Clear();
     }
 }
