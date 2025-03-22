@@ -19,7 +19,7 @@ A **fully customizable, dynamic UI tutorial system** for Unity that helps guide 
 ## 📥 Installation & Setup
 ### 1️⃣ Clone the Repository
 ```bash
-git clone https://github.com/BlackSentryDevXo/UI-Obboarding-Tutorial-Mask-System-Unity.git
+git clone https://github.com/BlackSentryDevXo/UI-Onboarding-Tutorial-Mask-System-Unity.git
 ```
 
 ### 2️⃣ Import into Unity
